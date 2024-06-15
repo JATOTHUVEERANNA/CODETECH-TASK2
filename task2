@@ -1,0 +1,238 @@
+# Weather Forecast Application
+
+This project is a simple and intuitive weather forecasting application that allows users to check the weather conditions of any city worldwide. The application uses the OpenWeatherMap API to fetch real-time weather data and displays it in a user-friendly interface.
+
+## Features
+
+- Real-Time Weather Data: Fetches and displays current weather data including temperature, humidity, wind speed, and weather conditions.
+- Search Functionality: Users can search for any city and get the latest weather information.
+- Dynamic Weather Icons: Displays different weather icons based on the current weather conditions (e.g., clouds, clear sky, rain, drizzle, mist, snow).
+- Error Handling: Provides an error message when an invalid city name is entered.
+- Responsive Design: The application is designed to be responsive and works well on various devices.
+
+## Technologies Used
+
+- HTML: For structuring the web page.
+- CSS: For styling the web page and making it visually appealing.
+- JavaScript: For fetching data from the OpenWeatherMap API and dynamically updating the web page.
+- OpenWeatherMap API: To get real-time weather data.
+
+## How to Use
+
+1. Search for a City: Enter the name of a city in the search box.
+2. Get Weather Information: Click the search button to fetch and display the current weather information for the specified city.
+3. View Weather Details: The application will display the temperature, humidity, wind speed, and an appropriate weather icon based on the fetched data.
+4. Handle Errors: If an invalid city name is entered, an error message will be displayed.
+
+## Project Structure
+
+- index.html: The main HTML file that contains the structure of the application.
+- style.css: The CSS file for styling the application.
+- script.js: The JavaScript file that contains the logic for fetching and displaying weather data.
+- images: A directory containing weather icons used in the application.
+
+
+##HTML CODE
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherApplication</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="enter city name"
+            spellcheck="false">
+            <button><img src="images/search.png"></button>
+        </div>
+        <div class="error">
+            <p>Invalid City name</p>
+
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" class="weather-icon">
+            <h1 class="temp">10°C</h1>
+            <h2 class="city">MABD</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="images/humidity.png">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png">
+                    <div>
+                        <p class="wind">100km/h</p>
+                        <p>wind speed</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <script src="script.js">
+        
+    </script>
+</body>
+</html>
+
+###CSS CODE
+
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'popins',sans-serif;
+  box-sizing: border-box;  
+}
+body{
+    background-color: rgb(106, 163, 204);
+
+}
+.card{
+  width: 90%;
+  max-width: 470px;
+  background: linear-gradient(135deg,#1c5848,#5b548a);
+  color:#fff;
+  margin: 100px auto 0;
+  border-radius: 20px;
+  padding: 40px 35px;
+  text-align: center;
+}
+.search{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.search input{
+  border: 0;
+  outline: 0;
+  background: #c4c7d3;
+  color: #555;
+  padding: 10px 25px;
+  height: 60px;
+  border-radius: 30px;
+  flex: 1;
+  margin-right: 16px;
+  font-size: 18px;
+}
+.search button{
+  border: 0;
+  outline: 0;
+  background: #c4c7d3;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+.search button img{
+  width: 16px;
+}
+.weather-icon{
+  width: 170px;
+  margin-top:30px;
+}
+.weather h1{
+  font-size: 80px;
+  font-weight: 500;
+}
+.weather h2{
+  font-size: 45px;
+  font-weight: 400;
+  margin-top: -10px;
+}
+.details{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding:  0 20px;
+  margin-top: 50px;
+}
+.col{
+  display: flex;
+  align-items: center;
+  text-align: left;
+
+}
+.col img{
+  width: 40px;
+  margin-right: 10px;
+}
+.humidity,.wind{
+     font-size: 28px;
+     margin-top: -6px;
+}
+.weather{
+  display: none;
+}
+.error{
+  text-align: left;
+  margin-left: 10px;
+  font-size: 14px;
+  margin-top: 10px;
+  display: none;
+
+}
+
+## javaScript Code
+const apiKey="a82e0f1519c12b5a51811730fa1cddb1";
+const apiUrl="https://api.openweathermap.org/data/2.5/weather?&units=metric&q=";
+const searchBox= document.querySelector(".search input");
+const weatherIcon=document.querySelector(".weather-icon");
+const searchBtn= document.querySelector(".search button");
+async function checkWeather(city){
+    const response= await fetch(apiUrl+ city + `&appid=${apiKey}`);
+    if(response.status==404){
+      document.querySelector(".error").style.display="block";  
+      document.querySelector(".weather").style.display="none";  
+    
+    }
+    else{
+        var data= await response.json();
+   
+    document.querySelector(".city").innerHTML=data.name;
+    document.querySelector(".temp").innerHTML=Math.round(data.main.temp)  + "°C";
+    document.querySelector(".humidity").innerHTML=data.main.humidity +"%";
+    document.querySelector(".wind").innerHTML=data.wind.speed +"km/h" ;
+
+    if(data.weather[0].main=='Clouds'){
+        weatherIcon.src="images/clouds.png";
+    }
+
+   else if(data.weather[0].main=="Clear"){
+        weatherIcon.src="images/clear.png";
+    }
+
+     else if(data.weather[0].main=='Rain'){
+        weatherIcon.src="images/rain.png";
+    }
+
+    else if(data.weather[0].main=='Drizzle'){
+        weatherIcon.src="images/drizzle.png";
+    }
+
+    else if(data.weather[0].main=="Mist"){
+        weatherIcon.src="images/mist.png";
+    }
+    
+    
+    else if(data.weather[0].main=="Snow"){
+        weatherIcon.src="images/snow.png";
+    }
+
+    document.querySelector(".weather").style.display="block";
+     
+    }
+    
+}
+searchBtn.addEventListener("click",()=>{
+    checkWeather(searchBox.value);
+});
+
